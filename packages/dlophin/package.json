@@ -1,0 +1,47 @@
+{
+  "name": "dlophin",
+  "version": "0.0.1",
+  "description": "渐进式构建工具",
+  "bin": {
+    "dlophin": "bin/dlophin.js"
+  },
+  "keywords": [
+    "cli",
+    "webpack",
+    "vite",
+    "swc",
+    "esbuild",
+    "esm"
+  ],
+  "author": "yellowbee <709341218@qq.com>",
+  "homepage": "https://github.com/yellowbeee/dlophin.git",
+  "license": "MIT",
+  "main": "dist/cli.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yellowbeee/dlophin.git"
+  },
+  "scripts": {
+    "dev": "swc src -d dist --watch"
+  },
+  "bugs": {
+    "url": "https://github.com/yellowbeee/dlophin/issues"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.1.52",
+    "@swc/core": "^1.2.112",
+    "cac": "^6.7.12"
+  },
+  "dependencies": {
+    "dlophin": "^0.0.1"
+  }
+}
