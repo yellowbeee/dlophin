@@ -1,5 +1,5 @@
 {
-  "name": "@dlophin/vite-service",
+  "name": "@dlophin/build-vite",
   "version": "0.0.1",
   "description": "",
   "keywords": [
@@ -11,12 +11,13 @@
   "author": "yellowbee <709341218@qq.com>",
   "homepage": "https://github.com/yellowbeee/dlophin.git",
   "license": "MIT",
-  "main": "lib/cli.js",
+  "main": "dist/cli.js",
+  "typings": "dist/cli.d.ts",
   "directories": {
-    "lib": "lib"
+    "dist": "dist"
   },
   "files": [
-    "lib",
+    "dist",
     "src"
   ],
   "engines": {
@@ -28,5 +29,8 @@
   },
   "bugs": {
     "url": "https://github.com/yellowbeee/dlophin/issues"
+  },
+  "devDependencies": {
+    "vite": "^2.6.14"
   }
 }

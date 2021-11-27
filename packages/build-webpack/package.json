@@ -1,14 +1,9 @@
 {
-  "name": "dlophin",
+  "name": "@dlophin/build-webpack",
   "version": "0.0.1",
-  "description": "渐进式构建工具",
-  "bin": {
-    "dlophin": "bin/dlophin.js"
-  },
+  "description": "",
   "keywords": [
-    "cli",
     "webpack",
-    "vite",
     "swc",
     "esbuild",
     "esm"
@@ -16,12 +11,14 @@
   "author": "yellowbee <709341218@qq.com>",
   "homepage": "https://github.com/yellowbeee/dlophin.git",
   "license": "MIT",
-  "main": "dist/cli.js",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "directories": {
     "dist": "dist"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "engines": {
     "node": ">=14.0.0"
@@ -30,14 +27,13 @@
     "type": "git",
     "url": "git+https://github.com/yellowbeee/dlophin.git"
   },
-  "scripts": {},
   "bugs": {
     "url": "https://github.com/yellowbeee/dlophin/issues"
   },
   "devDependencies": {
-    "@dlophin/build-vite": "workspace:^0.0.1",
-    "@dlophin/build-webpack": "workspace:^0.0.1",
-    "cac": "^6.7.12"
+    "chalk": "^5.0.0",
+    "vite": "^2.6.14",
+    "webpack": "^5.64.4"
   },
   "dependencies": {
     "@dlophin/build-core": "workspace:^0.0.1"

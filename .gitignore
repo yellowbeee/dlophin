@@ -1,4 +1,5 @@
 .DS_Store
 node_modules
 dist
-tsconfig.cache.json
+tsconfig-cache.json
+.pnpm-debug.log

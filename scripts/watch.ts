@@ -1,27 +1,35 @@
-import path from 'path'
-import glob from 'glob'
-import fs from 'fs'
-import shell from 'shelljs'
+import * as path from 'path'
+import * as glob from 'glob'
+import * as shell from 'shelljs'
+import * as fs from 'fs'
 ;(async () => {
   const cwd = path.join(__dirname, '../packages')
   const packages = glob.sync('*', {cwd}).map(dirname => path.join('packages', dirname))
 
-  const tsWriter = fs.createWriteStream(path.join(__dirname, '../tsconfig.cache.json'))
-  tsWriter.write(
+  const references = packages.map(name => ({
+    path: name,
+  }))
+  fs.writeFileSync(
+    path.join(__dirname, '../tsconfig-cache.json'),
     JSON.stringify(
       {
         files: [],
-        references: packages.map(name => ({
-          path: name,
-        })),
+        references,
+        include: ['**/*.d.ts'],
       },
       null,
       '\t',
     ),
   )
 
-  //
-  shell.exec('tsc --build ./tsconfig.cache.json -w')
+  // swc packages/*
+  // clean
+  shell.exec('pnpm run clean')
+
+  const str = references.reduce((prev, next, key) => {
+    return `${prev}'cd ${next.path} && swc src -d dist --watch' `
+  }, `concurrently `)
+  shell.exec(str + `'tsc --build ./tsconfig-cache.json -w' `)
 })().catch(e => {
   console.trace(e)
   // eslint-disable-next-line no-process-exit

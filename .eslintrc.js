@@ -1,4 +1,5 @@
 const { defineConfig } = require('eslint-define-config')
+const { off } = require('process')
 
 
 module.exports = defineConfig({
@@ -31,6 +32,7 @@ module.exports = defineConfig({
     '@typescript-eslint/triple-slash-reference': 0,
     'node/no-unsupported-features/es-syntax': 'off',
     'node/no-unpublished-import': 'off',
+    'node/no-missing-import': 'off',
     'prettier/prettier': [
       'error',
       {
