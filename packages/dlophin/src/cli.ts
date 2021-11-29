@@ -1,24 +1,47 @@
 import {cac} from 'cac'
-import * as pkg from '../package.json'
+// import * as pkg from '../package.json'
+
+export type TCliCommomOptions = {
+  config?: string
+  root?: string
+  base?: string
+  logLevel?: 'info' | 'warn' | 'error'
+  debug?: boolean
+}
+
+export type TCliStartOptions = {
+  host?: string
+  port?: number
+  https?: boolean
+  open?: boolean
+  mode?: string
+} & TCliCommomOptions
 
 const cli = cac('dlophin')
 
 // cli.option
-
 cli
-  .command('[root]') // default command
+  .option('-c, --config <file>', `[string] use specified config file`)
+  .option('-r, --root <path>', `[string] use specified root directory`)
+  .option('--base <path>', `[string] public base path (default: /)`)
+  .option('-l, --logLevel <level>', `[string] info | warn | error`)
+  .option('-d, --debug [feat]', `[string | boolean] show debug logs`)
+
+// dev
+cli
+  .command('start [root]') // default command
   .alias('start') // alias to align with the script name
   .option('--host [host]', `[string] specify hostname`)
   .option('--port <port>', `[number] specify port`)
   .option('--https', `[boolean] use TLS + HTTP/2`)
   .option('--open [path]', `[boolean | string] open browser on startup`)
   .option('-m, --mode <mode>', `[string] set env mode`)
-  .action(async (root: string, options: any) => {
-    // const serve = await import('./server')
-    console.log(options)
+  .action(async (root: string, options: TCliStartOptions) => {
+    const start = (await import('./start')).default
+    start(options)
   })
 
 cli.help()
 
-cli.version(pkg.version)
+// cli.version(pkg.version)
 cli.parse()

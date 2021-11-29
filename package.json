@@ -9,7 +9,8 @@
   },
   "scripts": {
     "watch": "ts-node scripts/watch.ts",
-    "clean": "ts-node scripts/clean.ts"
+    "clean": "ts-node scripts/clean.ts",
+    "test": "cd packages/dlophin && tsc --build -w"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.52",

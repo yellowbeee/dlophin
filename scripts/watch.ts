@@ -10,12 +10,11 @@ import * as fs from 'fs'
     path: name,
   }))
   fs.writeFileSync(
-    path.join(__dirname, '../tsconfig-cache.json'),
+    path.join(__dirname, '../tsconfig.json'),
     JSON.stringify(
       {
         files: [],
         references,
-        include: ['**/*.d.ts'],
       },
       null,
       '\t',
@@ -29,7 +28,7 @@ import * as fs from 'fs'
   const str = references.reduce((prev, next, key) => {
     return `${prev}'cd ${next.path} && swc src -d dist --watch' `
   }, `concurrently `)
-  shell.exec(str + `'tsc --build ./tsconfig-cache.json -w' `)
+  shell.exec(str + `'tsc --build -w' `)
 })().catch(e => {
   console.trace(e)
   // eslint-disable-next-line no-process-exit

@@ -9,7 +9,7 @@ import {ChildProcess, fork} from 'child_process'
 const child: ChildProcess | null = null
 
 export = async (cliOptions: TCliStartOptions) => {
-  const run = () => {
+  const run = async () => {
     // port
     const port = cliOptions.port || 3000
     // port is alive
@@ -46,7 +46,7 @@ export = async (cliOptions: TCliStartOptions) => {
   })
 
   watcher.on('error', error => {
-    log.error('fail to watch file', error)
-    process.exit(1)
+    // log.error('fail to watch file', error)
+    // process.exit(1)
   })
 }

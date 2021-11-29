@@ -1,5 +1,6 @@
-import {BuildCore, TBuildModule, TBuildModuleOptions} from '@dlophin/build-core'
-import {webpackStart} from '@dlophin/build-webpack'
+import BuildCore from './core'
+import type {TBuildModule, TBuildModuleOptions} from './core'
+import {webpackStart} from './webpack'
 
 class BuildService extends BuildCore {
   getBuildModule(options: TBuildModuleOptions): TBuildModule<any> {

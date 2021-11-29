@@ -15,8 +15,9 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
-    "composite": true,
+    // "composite": true,
     "paths": {}
   },
-  "include": ["**/*.d.ts"],
+  // "include": ["**.ts"]
+  
 }
