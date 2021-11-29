@@ -50,7 +50,7 @@ export = async (core: BuildCore, options: any) => {
 
     console.log()
     console.log(
-      // eslint-disable-next-line node/no-missing-require
+      // eslint-disable-next-line node/no-extraneous-require
       chalk.cyan(`\n  dlophin v${require('dlophin/package.json').version}`) + chalk.green(' Starting the server at:'),
     )
     console.log('   - Local  : ', chalk.underline.yellow(localUrl))
@@ -63,4 +63,6 @@ export = async (core: BuildCore, options: any) => {
       openBrowser(localUrl)
     }
   })
+
+  return server
 }

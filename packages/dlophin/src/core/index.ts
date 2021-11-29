@@ -5,8 +5,8 @@ import chalk from 'chalk'
 import {isFunction, merge} from 'lodash'
 import WebpackChainConfig from 'webpack-chain'
 import loadFile from '../utils/loadFile'
-import getBuildConfig from 'src/utils/getBuildConfig'
-import {TCliCommomOptions, TCliStartOptions} from 'src/cli'
+import getBuildConfig from '../utils/getBuildConfig'
+import {TCliCommomOptions} from '../cli'
 //
 export type CommandName = 'start' | 'test' | 'build'
 

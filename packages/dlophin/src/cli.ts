@@ -7,6 +7,7 @@ export type TCliCommomOptions = {
   base?: string
   logLevel?: 'info' | 'warn' | 'error'
   debug?: boolean
+  mode?: 'development' | 'production'
 }
 
 export type TCliStartOptions = {
@@ -14,7 +15,6 @@ export type TCliStartOptions = {
   port?: number
   https?: boolean
   open?: boolean
-  mode?: string
 } & TCliCommomOptions
 
 const cli = cac('dlophin')
@@ -26,6 +26,7 @@ cli
   .option('--base <path>', `[string] public base path (default: /)`)
   .option('-l, --logLevel <level>', `[string] info | warn | error`)
   .option('-d, --debug [feat]', `[string | boolean] show debug logs`)
+  .option('-m, --mode <mode>', `[string] set env mode`)
 
 // dev
 cli
@@ -35,7 +36,6 @@ cli
   .option('--port <port>', `[number] specify port`)
   .option('--https', `[boolean] use TLS + HTTP/2`)
   .option('--open [path]', `[boolean | string] open browser on startup`)
-  .option('-m, --mode <mode>', `[string] set env mode`)
   .action(async (root: string, options: TCliStartOptions) => {
     const start = (await import('./start')).default
     start(options)
