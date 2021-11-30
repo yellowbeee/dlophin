@@ -1,0 +1,44 @@
+{
+  "name": "@dlophin/build-webpack-config",
+  "version": "0.0.1",
+  "private": true,
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "keywords": [
+    "webpack",
+    "config"
+  ],
+  "author": "yellowbee <709341218@qq.com>",
+  "homepage": "https://github.com/yellowbeee/dlophin.git",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yellowbeee/dlophin.git"
+  },
+  "scripts": {},
+  "bugs": {
+    "url": "https://github.com/yellowbeee/dlophin/issues"
+  },
+  "devDependencies": {
+    "@dlophin/babel-preset-env": "workspace:^0.0.1",
+    "@types/mini-css-extract-plugin": "^2.4.0",
+    "babel-loader": "^8.2.3",
+    "css-loader": "^6.5.1",
+    "less-loader": "^10.2.0",
+    "lodash": "^4.17.21",
+    "mini-css-extract-plugin": "^2.4.5",
+    "postcss-loader": "^6.2.1",
+    "sass-loader": "^12.3.0",
+    "url-loader": "^4.1.1",
+    "webpack-chain": "^6.5.1"
+  }
+}

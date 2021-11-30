@@ -6,5 +6,5 @@
     "outDir": "lib",
     "declarationDir": "lib"
   },
-  "exclude": ["bin", "**/*.js", "lib"]
+  // "include": ["src"]
 }

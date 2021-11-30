@@ -2,6 +2,12 @@
 	"files": [],
 	"references": [
 		{
+			"path": "packages/babel-preset-env"
+		},
+		{
+			"path": "packages/build-webpack-config"
+		},
+		{
 			"path": "packages/demo"
 		},
 		{

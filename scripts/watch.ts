@@ -26,7 +26,7 @@ import * as fs from 'fs'
   shell.exec('pnpm run clean')
 
   const str = references.reduce((prev, next, key) => {
-    return `${prev}'cd ${next.path} && swc src -d dist --watch' `
+    return `${prev}'cd ${next.path} && swc src -d lib --watch' `
   }, `concurrently `)
   shell.exec(str + `'tsc --build -w' `)
 })().catch(e => {
