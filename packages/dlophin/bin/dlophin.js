@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 function start() {
-  require('../dist/cli')
+  require('../lib/cli')
 }
 
 start()
