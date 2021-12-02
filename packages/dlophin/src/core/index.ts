@@ -1,9 +1,9 @@
 import path from 'path'
-import glob from 'glob'
 import fs from 'fs'
 import chalk from 'chalk'
 import {isFunction, merge} from 'lodash'
 import WebpackChainConfig from 'webpack-chain'
+import getWebpackConfig from '@dlophin/build-webpack-config'
 import loadFile from '../utils/loadFile'
 import getBuildConfig from '../utils/getBuildConfig'
 import {TCliCommomOptions} from '../cli'
@@ -72,6 +72,9 @@ class BuildCore {
 
   public webpackConfig: WebpackChainConfig
 
+  // save webpackConfig to task
+  public webpackConfigQueue: Array<(config: WebpackChainConfig) => WebpackChainConfig>
+
   constructor(public options: TBuildCoreOptions) {
     const {command, args = {}} = options || {}
 
@@ -82,13 +85,15 @@ class BuildCore {
     this.buildModules = {}
     this.eventHooks = {}
     this.plugins = []
-    this.webpackConfig = new WebpackChainConfig()
+    this.webpackConfig = getWebpackConfig(args.mode)
+    this.webpackConfigQueue = []
   }
 
   private async init() {
     this.resolveConfig()
     await this.workPlugins()
     await this.workUserConfig()
+    await this.workWebpackConfig()
   }
 
   public getUserConfig(): TUserConfig {
@@ -117,7 +122,7 @@ class BuildCore {
   public workUserConfig() {
     const {webpack} = this.userConfig
     if (webpack) {
-      this.webpackConfig = merge(this.webpackConfig, webpack(this.webpackConfig))
+      this.webpackConfig.merge(webpack(this.webpackConfig))
     }
   }
 
@@ -179,7 +184,15 @@ class BuildCore {
     }
   }
 
-  public workWebpackConfig() {}
+  public setWebpackConfig(fn: (config: WebpackChainConfig) => WebpackChainConfig) {
+    this.webpackConfigQueue.push(fn)
+  }
+
+  public async workWebpackConfig() {
+    for (const fn of this.webpackConfigQueue) {
+      this.webpackConfig.merge(await fn(this.webpackConfig))
+    }
+  }
 
   public getBuildModule(options: TBuildModuleOptions): TBuildModule<any> {
     const {command} = options

@@ -32,6 +32,7 @@
     "@dlophin/babel-preset-env": "workspace:^0.0.1",
     "@types/mini-css-extract-plugin": "^2.4.0",
     "babel-loader": "^8.2.3",
+    "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "css-loader": "^6.5.1",
     "less-loader": "^10.2.0",
     "lodash": "^4.17.21",
@@ -39,6 +40,7 @@
     "postcss-loader": "^6.2.1",
     "sass-loader": "^12.3.0",
     "url-loader": "^4.1.1",
-    "webpack-chain": "^6.5.1"
+    "webpack-chain": "^6.5.1",
+    "webpack-simple-progress-plugin": "^0.0.5"
   }
 }

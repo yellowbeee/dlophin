@@ -58,8 +58,10 @@ function setRuleForCss(config: WebpackChainConfig) {
         })
         .end()
 
-      const [loaderName, loaderPath, loaderOptions] = loader
-      rule.use(loaderName).loader(require.resolve(loaderPath)).options(loaderOptions)
+      if (loader) {
+        const [loaderName, loaderPath, loaderOptions] = loader
+        rule.use(loaderName).loader(require.resolve(loaderPath)).options(loaderOptions)
+      }
     })
   })
 }

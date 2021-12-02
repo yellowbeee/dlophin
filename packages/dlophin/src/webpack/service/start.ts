@@ -20,6 +20,7 @@ export = async (core: BuildCore, options: any) => {
     compiler = webpack(webpackConfig.toConfig())
   } catch (err) {
     console.error(chalk.red('WEBPACK', 'Failed to init webpack'))
+    console.error(chalk.red('WEBPACK', err.stack || err.toString()))
     await applyHook('initError', {err})
     // eslint-disable-next-line no-process-exit
     process.exit(1)

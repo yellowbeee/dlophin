@@ -13,4 +13,6 @@ export default (mode: TWebpackConfigMode) => {
   webpackLoaders(config)
   // set webpackPlugins
   webpackPlugins(config)
+
+  return config
 }
