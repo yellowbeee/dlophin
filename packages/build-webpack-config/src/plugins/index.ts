@@ -1,7 +1,8 @@
 import type WebpackChainConfig from 'webpack-chain'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import * as SimpleProgressPlugin from 'webpack-simple-progress-plugin'
-import * as CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
+import SimpleProgressPlugin from 'webpack-simple-progress-plugin'
+import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
+import FriendlyErrorsWebpackPlugin from 'friendly-errors-webpack-plugin'
 
 export default (config: WebpackChainConfig) => {
   //css
@@ -19,4 +20,10 @@ export default (config: WebpackChainConfig) => {
   config.plugin('CaseSensitivePathsPlugin').use(CaseSensitivePathsPlugin).end()
   // progress
   config.plugin('SimpleProgressPlugin').use(SimpleProgressPlugin).end()
+  // clean console
+  config.plugin('FriendlyErrorsWebpackPlugin').use(FriendlyErrorsWebpackPlugin, [
+    {
+      clearConsole: true,
+    },
+  ]).end
 }

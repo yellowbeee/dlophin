@@ -4,19 +4,20 @@ import chalk from 'chalk'
 import {isFunction, merge} from 'lodash'
 import WebpackChainConfig from 'webpack-chain'
 import getWebpackConfig from '@dlophin/build-webpack-config'
-import loadFile from '../utils/loadFile'
-import getBuildConfig from '../utils/getBuildConfig'
-import {TCliCommomOptions} from '../cli'
+import {loadFile, getResolvePath} from '@dlophin/build-utils'
 //
 export type CommandName = 'start' | 'test' | 'build'
 
-export type CommandArgs = TCliCommomOptions & Record<string, any>
+export type CommandArgs = Record<string, any>
 
 export type TPluginsList = (string | [string, Record<any, string>])[]
 
 export type TPluginOptions = Record<string, any> | Record<string, any>[]
 
-export type TPluginAPI = Pick<BuildCore, 'command' | 'commandArgs' | 'onHook' | 'webpackConfig'>
+export type TPluginAPI = Pick<
+  BuildCore,
+  'command' | 'commandArgs' | 'root' | 'buildConfig' | 'onHook' | 'setWebpackConfig'
+>
 
 export type TPluginInfo = {
   name?: string
@@ -25,24 +26,42 @@ export type TPluginInfo = {
   fn: (api: TPluginAPI) => Promise<void> | void
 }
 
-export type TBuildCoreOptions = {
-  command: CommandName
-  args: CommandArgs
-  rootDir?: string
+export type TBuildConfig = {
+  /** 项目入口目录 */
+  project: string
+  /** 入口 */
+  entry: string | Array<string> | Record<string, string>
+  /** 出口 */
+  output: string
+  /** 资源路径 */
+  publicPath: string
+  /** sourceMap */
+  // sourceMap: string
+  /** 排除bundle */
+  externals?: Record<string, string>
+  /** 压缩类型 */
+  minify: 'swc' | 'esbuild' | 'terser'
+  /** 网络代理 */
+  proxy?: Record<string, {target: string}>
+  buildType: 'webpack' | 'vite'
+  /** 插件 */
   plugins?: TPluginsList
 }
 
-export type TBuildModuleOptions = {command: CommandName; commandArgs: CommandArgs; userConfig: TUserConfig}
+export type TUserConfig = Partial<TBuildConfig>
+
+export type TBuildCoreOptions = {
+  command: CommandName
+  args: CommandArgs
+  root?: string
+  plugins?: TPluginsList
+}
+
+export type TBuildModuleOptions = {command: CommandName; commandArgs: CommandArgs; buildConfig: TBuildConfig}
 
 export type TBuildModule<T> = (context: BuildCore, options: any) => Promise<T>
 
 export type TBuildModules<T> = Record<CommandName, TBuildModule<T>>
-
-export type TUserConfig = {
-  webpack?: (config: WebpackChainConfig) => WebpackChainConfig
-  buildType?: 'webpack' | 'vite'
-  plugins?: TPluginsList
-}
 
 export type TOnEventHookCallBack = (params: TOnEventHookCallBackParams) => Promise<void> | void
 
@@ -60,11 +79,11 @@ class BuildCore {
 
   public commandArgs: CommandArgs
 
-  public userConfig: TUserConfig
+  public root: string
+
+  public buildConfig: TBuildConfig
 
   public buildModules: TBuildModules<any> | Record<string, never>
-
-  public rootDir: string
 
   public eventHooks: TEventHooks
 
@@ -77,11 +96,21 @@ class BuildCore {
 
   constructor(public options: TBuildCoreOptions) {
     const {command, args = {}} = options || {}
+    this.root = args.root || process.cwd()
 
+    const project = getResolvePath(args.project || 'src', this.root)
     this.command = command
     this.commandArgs = args
-    this.rootDir = args.root || process.cwd()
-    this.userConfig = {}
+    this.buildConfig = {
+      entry: {
+        index: getResolvePath('index.{js,jsx,ts,tsx}', project),
+      },
+      project,
+      output: path.resolve(this.root, 'build'),
+      publicPath: '/',
+      minify: 'terser',
+      buildType: 'webpack',
+    }
     this.buildModules = {}
     this.eventHooks = {}
     this.plugins = []
@@ -90,21 +119,20 @@ class BuildCore {
   }
 
   private async init() {
-    this.resolveConfig()
+    await this.resolveConfig()
     await this.workPlugins()
     await this.workUserConfig()
     await this.workWebpackConfig()
   }
 
-  public getUserConfig(): TUserConfig {
+  public getUserConfig(): Partial<TUserConfig> {
     const {config} = this.commandArgs
-    const configPath = getBuildConfig(config || '', this.rootDir)
-
+    const configPath = getResolvePath(config, this.root)
     let userConfig = {}
     // config exisis
     if (configPath && fs.existsSync(configPath)) {
       try {
-        userConfig = loadFile(configPath)
+        userConfig = loadFile(configPath)()
       } catch (err) {
         console.info('CONFIG', `Fail to load config file ${configPath}`)
         console.log(chalk.red('CONFIG', err.stack || err.toString()))
@@ -120,16 +148,16 @@ class BuildCore {
   }
 
   public workUserConfig() {
-    const {webpack} = this.userConfig
-    if (webpack) {
-      this.webpackConfig.merge(webpack(this.webpackConfig))
-    }
+    // const {webpack} = this.userConfig
+    // if (webpack) {
+    //   this.webpackConfig = webpack(this.webpackConfig)
+    // }
   }
 
   public async resolveConfig() {
-    this.userConfig = await this.getUserConfig()
+    this.buildConfig = merge(this.buildConfig, await this.getUserConfig())
     const {plugins = []} = this.options
-    const registerPlugins = [...plugins, ...(this.userConfig.plugins || [])]
+    const registerPlugins = [...plugins, ...(this.buildConfig.plugins || [])]
     this.plugins = this.resolvePlugins(registerPlugins)
   }
 
@@ -146,7 +174,7 @@ class BuildCore {
       // pluginName
       const pluginName = newPlugin[0]
       // pluginPath => absolute path
-      const pluginPath = path.isAbsolute(pluginName) ? pluginName : require.resolve(pluginName, {paths: [this.rootDir]})
+      const pluginPath = path.isAbsolute(pluginName) ? pluginName : require.resolve(pluginName, {paths: [this.root]})
       // pluginOptions
       const pluginOptions = newPlugin[1]
 
@@ -177,8 +205,10 @@ class BuildCore {
       const api = {
         command: this.command,
         commandArgs: this.commandArgs,
+        root: this.root,
         onHook: this.onHook,
-        webpackConfig: this.webpackConfig,
+        buildConfig: this.buildConfig,
+        setWebpackConfig: this.setWebpackConfig.bind(this),
       }
       await fn(api)
     }
@@ -190,7 +220,7 @@ class BuildCore {
 
   public async workWebpackConfig() {
     for (const fn of this.webpackConfigQueue) {
-      this.webpackConfig.merge(await fn(this.webpackConfig))
+      this.webpackConfig = await fn(this.webpackConfig)
     }
   }
 
@@ -217,9 +247,9 @@ class BuildCore {
   }
 
   public async run(options: any) {
-    const {command, commandArgs, userConfig} = this
+    const {command, commandArgs, buildConfig} = this
     await this.init()
-    const buildModule = this.getBuildModule({command, commandArgs, userConfig})
+    const buildModule = this.getBuildModule({command, commandArgs, buildConfig})
     return buildModule(this, options)
   }
 }

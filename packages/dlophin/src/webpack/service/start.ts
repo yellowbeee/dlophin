@@ -3,20 +3,49 @@ import webpack from 'webpack'
 import WebpackDevServer from 'webpack-dev-server'
 import openBrowser from 'react-dev-utils/openBrowser'
 import serverUrl from '../../utils/serverUrl'
-import BuildCore, {TBuildModule} from '../../core'
+import BuildCore, {TBuildModule} from '@dlophin/build-core'
 
 export = async (core: BuildCore, options: any) => {
-  const {command, commandArgs, userConfig, webpackConfig, applyHook} = core
+  const {command, commandArgs, webpackConfig, applyHook, buildConfig} = core
   // devServerConfig
   const devServerConfig: any = {
     port: commandArgs.port || 3333,
     host: commandArgs.host || '0.0.0.0',
     https: commandArgs.https || false,
+    historyApiFallback: true,
+    allowedHosts: 'all',
+    compress: true,
+    webSocketServer: 'ws',
+    devMiddleware: {
+      publicPath: '/',
+    },
+    static: [
+      {
+        publicPath: '/',
+        watch: {
+          // ignored: watchIgnoredRegexp,
+        },
+      },
+      {
+        directory: buildConfig.output,
+        publicPath: '/',
+        staticOptions: {
+          // setHeaders: function (res, path) {
+          //   if (path.toString().endsWith('.d.ts')) res.set('Content-Type', 'application/javascript; charset=utf-8')
+          // },
+        },
+      },
+    ],
+    client: {
+      overlay: false,
+      logging: 'info',
+    },
   }
 
   let compiler
   try {
     // do optimize
+    console.log(webpackConfig.toConfig())
     compiler = webpack(webpackConfig.toConfig())
   } catch (err) {
     console.error(chalk.red('WEBPACK', 'Failed to init webpack'))
@@ -33,6 +62,18 @@ export = async (core: BuildCore, options: any) => {
       warnings: true,
       timings: true,
     })
+
+    setTimeout(() => {
+      console.log(
+        // eslint-disable-next-line node/no-extraneous-require
+        chalk.cyan(`\n  dlophin v${require('../../../package.json').version}`) +
+          chalk.green(' Starting the server at:'),
+      )
+      console.log('   - Local  : ', chalk.underline.yellow(localUrl))
+      console.log('   - Network: ', chalk.underline.yellow(localUrl))
+      console.log(chalk.cyan(`\n  Webpack ready in ${statsJson.time || 0}ms.\n`))
+      console.log()
+    }, 1)
   })
 
   // protocol
@@ -49,15 +90,7 @@ export = async (core: BuildCore, options: any) => {
       console.error('WEBPACK', error.stack || error.toString())
     }
 
-    console.log()
-    console.log(
-      // eslint-disable-next-line node/no-extraneous-require
-      chalk.cyan(`\n  dlophin v${require('dlophin/package.json').version}`) + chalk.green(' Starting the server at:'),
-    )
-    console.log('   - Local  : ', chalk.underline.yellow(localUrl))
-    console.log('   - Network: ', chalk.underline.yellow(localUrl))
     console.log(chalk.cyan(`\n  Server ready in ${Date.now() - startDevServerTime}ms.\n`))
-    console.log()
 
     // open browser
     if (commandArgs.open) {

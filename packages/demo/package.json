@@ -1,9 +1,0 @@
-{
-  "name": "demo",
-  "scripts": {
-    "start": "dlophin start"
-  },
-  "devDependencies": {
-    "dlophin": "workspace:^0.0.1"
-  }
-}

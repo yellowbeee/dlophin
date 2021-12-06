@@ -4,3 +4,6 @@ dist
 lib
 tsconfig-cache.json
 .pnpm-debug.log
+.cache
+.temp
+projects

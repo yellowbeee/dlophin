@@ -3,11 +3,12 @@ import detect from 'detect-port'
 import chalk from 'chalk'
 import chokidar from 'chokidar'
 import type {TCliStartOptions} from './cli'
-import getBuildConfig from './utils/getBuildConfig'
+import {getResolvePath} from '@dlophin/build-utils'
+import {USER_CONFIG} from './config/constant'
+import getPlugins from './getPlugins'
 
 export = async (cliOptions: TCliStartOptions) => {
-  // port
-  const port = cliOptions.port || 3000
+  const {port = 3000, config = USER_CONFIG, root = process.cwd()} = cliOptions
   // port is alive
   const newPort = await detect(port)
   if (newPort != port) {
@@ -18,12 +19,13 @@ export = async (cliOptions: TCliStartOptions) => {
 
   const service = new BuildService({
     command: 'start',
-    args: {...cliOptions, port: newPort},
+    args: {...cliOptions, port: newPort, config, root},
+    plugins: getPlugins(),
   })
 
   let server = await service.run({})
 
-  const configPath = getBuildConfig(cliOptions.config || '', cliOptions.root || process.cwd())
+  const configPath = getResolvePath(config, root)
   const watcher = chokidar.watch(configPath, {
     ignoreInitial: true,
   })

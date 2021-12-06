@@ -15,7 +15,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
-    // "composite": true,
+    // "composite": true,zx
     "paths": {}
   },  
 }

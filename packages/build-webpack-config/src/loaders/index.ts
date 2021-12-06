@@ -4,8 +4,15 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 function setRuleForCss(config: WebpackChainConfig) {
   const loaders: any[] = [
     ['css'],
-    ['scss', ['sass-loader', 'sass-loader']],
-    ['less', ['less-loader', 'less-loader', {lessOptions: {javascriptEnabled: true}}]],
+    ['scss', ['sass-loader', 'sass-loader'], {implementation: require(require.resolve('sass'))}],
+    [
+      'less',
+      [
+        'less-loader',
+        'less-loader',
+        {implementation: require(require.resolve('less')), lessOptions: {javascriptEnabled: true}},
+      ],
+    ],
   ]
 
   loaders.forEach(([style, loader]) => {
@@ -46,15 +53,19 @@ function setRuleForCss(config: WebpackChainConfig) {
         .use('postcss-loader')
         .loader(require.resolve('postcss-loader'))
         .options({
-          plugins: [
-            [
-              'postcss-preset-env',
-              {
-                stage: 3,
-                browsers: ['last 2 versions', 'Firefox ESR', '> 1%', 'ie >= 9', 'iOS >= 8', 'Android >= 4'],
-              },
+          implementation: require('postcss'),
+          postcssOptions: {
+            config: false,
+            plugins: [
+              [
+                'postcss-preset-env',
+                {
+                  stage: 3,
+                  browsers: ['last 2 versions', 'Firefox ESR', '> 1%', 'ie >= 9', 'iOS >= 8', 'Android >= 4'],
+                },
+              ],
             ],
-          ],
+          },
         })
         .end()
 

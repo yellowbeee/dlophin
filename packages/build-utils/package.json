@@ -1,0 +1,35 @@
+{
+  "name": "@dlophin/build-utils",
+  "version": "0.0.1",
+  "private": true,
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "keywords": [
+    "webpack",
+    "config"
+  ],
+  "author": "yellowbee <709341218@qq.com>",
+  "homepage": "https://github.com/yellowbeee/dlophin.git",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yellowbeee/dlophin.git"
+  },
+  "scripts": {},
+  "bugs": {
+    "url": "https://github.com/yellowbeee/dlophin/issues"
+  },
+  "devDependencies": {
+    "chalk": "^4.1.0",
+    "glob": "^7.2.0"
+  }
+}

@@ -27,6 +27,7 @@ cli
   .option('-l, --logLevel <level>', `[string] info | warn | error`)
   .option('-d, --debug [feat]', `[string | boolean] show debug logs`)
   .option('-m, --mode <mode>', `[string] set env mode`)
+  .option('-w, --watch <watch>', `[boolean] watch file`)
 
 // dev
 cli

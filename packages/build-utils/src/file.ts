@@ -1,7 +1,24 @@
+import * as swc from '@swc/core'
 import fs from 'fs'
-import buildFile from './buildFile'
 
-export = (filePath: string) => {
+export function buildFile(filePath: string) {
+  const {code} = swc.transformFileSync(filePath, {
+    jsc: {
+      target: 'es2019',
+      parser: {
+        syntax: 'typescript',
+        dynamicImport: true,
+      },
+    },
+    module: {
+      type: 'commonjs',
+    },
+  })
+
+  return code
+}
+
+export function loadFile(filePath: string) {
   const isJson = filePath.endsWith('.json')
   const isTs = filePath.endsWith('.ts')
 

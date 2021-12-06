@@ -1,0 +1,38 @@
+{
+  "name": "@dlophin/build-core",
+  "version": "0.0.1",
+  "private": true,
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "keywords": [
+    "webpack",
+    "config"
+  ],
+  "author": "yellowbee <709341218@qq.com>",
+  "homepage": "https://github.com/yellowbeee/dlophin.git",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yellowbeee/dlophin.git"
+  },
+  "scripts": {},
+  "bugs": {
+    "url": "https://github.com/yellowbeee/dlophin/issues"
+  },
+  "devDependencies": {
+    "@dlophin/build-utils": "workspace:^0.0.1",
+    "@dlophin/build-webpack-config": "workspace:^0.0.1",
+    "@types/chalk": "^2.2.0",
+    "chalk": "^4.1.0",
+    "webpack-chain": "^6.5.1"
+  }
+}
